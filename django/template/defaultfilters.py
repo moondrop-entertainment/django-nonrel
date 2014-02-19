@@ -242,6 +242,27 @@ def title(value):
 title.is_safe = True
 title = stringfilter(title)
 
+
+def truncatechars(value, arg):
+    """
+    Specific for Drawp school version.
+    
+    Slices a string by number of chars.
+    
+    From left to right.
+    
+    Value is the string to be sliced.
+    
+    Arg is an int value of the size
+    of the slice returned.
+    """
+    try:
+        length = int(arg)
+    except ValueError:
+        return value
+    return value[:length]
+
+
 def truncatewords(value, arg):
     """
     Truncates a string after a certain number of words.
