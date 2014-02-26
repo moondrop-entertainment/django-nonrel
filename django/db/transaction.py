@@ -13,10 +13,7 @@ or implicit commits or rollbacks.
 """
 import sys
 
-try:
-    from functools import wraps
-except ImportError:
-    from django.utils.functional import wraps  # Python 2.4 fallback.
+from functools import wraps
 
 from django.conf import settings
 from django.db import connections, DEFAULT_DB_ALIAS
