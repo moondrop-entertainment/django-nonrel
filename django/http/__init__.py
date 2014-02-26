@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import time
+import json
 from pprint import pformat
 from urllib import urlencode, quote
 from urlparse import urljoin
@@ -635,6 +636,27 @@ class HttpResponse(object):
             raise Exception("This %s instance cannot tell its position" % self.__class__)
         return sum([len(chunk) for chunk in self._container])
 
+
+class JsonResponse(HttpResponse):
+    """
+    Returns a JSON reponse.
+    Allows different encoders/decoders to be used
+    by passing an optional arg called `encoder`,
+    otherwise uses default.
+    
+    """
+    def __init__(self, content, status=None, enconder=None):
+        super(JsonResponse, self).__init__(
+            if encoder is not None:
+                content=json.dumps(content, cls=encoder),
+            else:
+                content=json.dumps(content)
+            mimetype='application/json',
+            status=status,
+            content_type='application/json',
+        )
+
+
 class HttpResponseRedirect(HttpResponse):
     status_code = 302
 
@@ -673,6 +695,10 @@ class HttpResponseGone(HttpResponse):
 
 class HttpResponseServerError(HttpResponse):
     status_code = 500
+
+class HttpResponseTooManyRequests(HttpResponse):
+    """To handle request throttling"""
+    status_code = 429 
 
 # A backwards compatible alias for HttpRequest.get_host.
 def get_host(request):
