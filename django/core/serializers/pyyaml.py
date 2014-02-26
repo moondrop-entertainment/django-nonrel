@@ -1,3 +1,7 @@
+#Updated to remove security issue where YAML was loaded without using safe_load() method from pyaml.
+#The deserializer method was modified to raise an exception if data is not secure.
+#Pulled from Django 1.5
+
 """
 YAML serializer.
 
@@ -9,6 +13,7 @@ import decimal
 import yaml
 
 from django.db import models
+from django.core.serializers.base import DeserializationError
 from django.core.serializers.python import Serializer as PythonSerializer
 from django.core.serializers.python import Deserializer as PythonDeserializer
 
@@ -43,6 +48,9 @@ class Serializer(PythonSerializer):
     def getvalue(self):
         return self.stream.getvalue()
 
+
+#modified method to make sure YAML is safely loaded
+#Fixes security issue in Django 1.3.
 def Deserializer(stream_or_string, **options):
     """
     Deserialize a stream or string of YAML data.
@@ -51,6 +59,12 @@ def Deserializer(stream_or_string, **options):
         stream = StringIO(stream_or_string)
     else:
         stream = stream_or_string
-    for obj in PythonDeserializer(yaml.load(stream), **options):
-        yield obj
-
+        
+    try:
+        for obj in PythonDeserializer(yaml.safe_load(stream), **options):
+            yield obj
+    except GeneratorExit:
+        raise
+    except Exception as e:
+        # Map to deserializer error
+        raise DeserializationError(e)
