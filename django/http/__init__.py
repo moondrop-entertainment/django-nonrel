@@ -646,11 +646,12 @@ class JsonResponse(HttpResponse):
     
     """
     def __init__(self, content, status=None, enconder=None):
+        if encoder is not None:
+            content=json.dumps(content, cls=encoder),
+        else:
+            content=json.dumps(content)
         super(JsonResponse, self).__init__(
-            if encoder is not None:
-                content=json.dumps(content, cls=encoder),
-            else:
-                content=json.dumps(content)
+            content,
             mimetype='application/json',
             status=status,
             content_type='application/json',
