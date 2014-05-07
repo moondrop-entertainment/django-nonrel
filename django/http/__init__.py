@@ -645,7 +645,7 @@ class JsonResponse(HttpResponse):
     otherwise uses default.
     
     """
-    def __init__(self, content, status=None, enconder=None):
+    def __init__(self, content, status=None, encoder=None):
         if encoder is not None:
             content=json.dumps(content, cls=encoder),
         else:
