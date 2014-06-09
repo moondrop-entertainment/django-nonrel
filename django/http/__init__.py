@@ -651,9 +651,9 @@ class JsonResponse(HttpResponse):
                 content=json.dumps(content, cls=encoder),
             else:
                 content=json.dumps(content)
-                mimetype='application/json',
-                status=status,
-                content_type='application/json',
+            mimetype='application/json',
+            status=status,
+            content_type='application/json',
             )
 
 
