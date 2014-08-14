@@ -637,26 +637,6 @@ class HttpResponse(object):
         return sum([len(chunk) for chunk in self._container])
 
 
-class JsonResponse(HttpResponse):
-    """
-    Returns a JSON reponse.
-    Allows different encoders/decoders to be used
-    by passing an optional arg called `encoder`,
-    otherwise uses default.
-    
-    """
-    def __init__(self, content, status=None, encoder=None):
-        super(JsonResponse, self).__init__(
-            if encoder is not None:
-                content=json.dumps(content, cls=encoder),
-            else:
-                content=json.dumps(content)
-            mimetype='application/json',
-            status=status,
-            content_type='application/json',
-            )
-
-
 class HttpResponseRedirect(HttpResponse):
     status_code = 302
 
